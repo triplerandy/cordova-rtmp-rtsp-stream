@@ -47,7 +47,7 @@ import java.util.Locale;
 /**
  * Author: Archie, Disono (webmonsph@gmail.com)
  * Website: https://webmons.com
- * 
+ *
  * Created at: 1/09/2018
  */
 
@@ -135,7 +135,7 @@ public class RTSPActivity extends CordovaActivity implements ConnectCheckerRtsp 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         activity = this.cordovaInterface.getActivity();
-        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         setContentView(_getResource("rtsp_rtmp_streamer", "layout"));
 
         PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
@@ -275,7 +275,7 @@ public class RTSPActivity extends CordovaActivity implements ConnectCheckerRtsp 
         this.resolutions = rtspCameral.getResolutionsBack();
         for (int i = 0; i < this.resolutions.size(); i++) {
             Log.i(TAG, "RES: H: " + this.resolutions.get(i).height + " W: " + this.resolutions.get(i).width);
-			
+
 			// get the recommended resolution
 			if (this.resolutions.get(i).width >= 720 && _w == 0) {
 				_w = this.resolutions.get(i).width;
