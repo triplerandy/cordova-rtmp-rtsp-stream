@@ -292,7 +292,7 @@ public class RTSPActivity extends CordovaActivity implements ConnectCheckerRtsp 
         VideoHelper videoH = new VideoHelper();
         Log.d(TAG, "Res: " + _w + "x" + _h + " bitrate " + videoH.bitrate(_h, _w));
 
-        if (rtspCameral.prepareAudio() && rtspCameral.prepareVideo(_h, _w, 30, videoH.bitrate(_h, _w),
+        if (rtspCameral.prepareAudio() && rtspCameral.prepareVideo(_h, _w, 30, 2000,
                 false, 0)) {
             rtspCameral.startStream(_url);
             _toggleBtnImgVideo(true);
