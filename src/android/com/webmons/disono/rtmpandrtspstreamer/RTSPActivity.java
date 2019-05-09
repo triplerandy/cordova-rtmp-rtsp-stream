@@ -229,7 +229,7 @@ public class RTSPActivity extends CordovaActivity implements ConnectCheckerRtsp 
         ic_torch.setOnClickListener(v -> _toggleFlash());
 
         ic_resolutions = findViewById(_getResource("ic_resolutions", "id"));
-        ic_resolutions.setOnClickListener(v -> _settingsDialog());
+        ic_resolutions.setOnClickListener(v -> _changeOrientation());
 
         ic_switch_camera = findViewById(_getResource("ic_switch_camera", "id"));
         ic_switch_camera.setOnClickListener(v -> _toggleCameraFace());
