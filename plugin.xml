@@ -38,8 +38,8 @@
         </config-file>
 
         <config-file target="AndroidManifest.xml" parent="/manifest/application">
-            <activity android:name="com.webmons.disono.rtmpandrtspstreamer.RTMPActivity" android:screenOrientation="landscape"/>
-            <activity android:name="com.webmons.disono.rtmpandrtspstreamer.RTSPActivity" android:screenOrientation="landscape"/>
+            <activity android:name="com.webmons.disono.rtmpandrtspstreamer.RTMPActivity" android:screenOrientation="portrait"/>
+            <activity android:name="com.webmons.disono.rtmpandrtspstreamer.RTSPActivity" android:screenOrientation="portrait"/>
         </config-file>
 
 		<framework src="src/android/build.gradle" custom="true" type="gradleReference" />
