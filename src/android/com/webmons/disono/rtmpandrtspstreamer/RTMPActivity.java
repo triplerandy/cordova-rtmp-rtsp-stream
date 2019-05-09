@@ -345,12 +345,8 @@ public class RTMPActivity extends CordovaActivity implements ConnectCheckerRtmp 
                     SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.ENGLISH);
                     currentDateAndTime = sdf.format(new Date());
                     rtmpCameral.startRecord(folder.getAbsolutePath() + "/" + currentDateAndTime + ".mp4");
-
-                    _toggleBtnRecord(true);
                 } catch (IOException e) {
                     rtmpCameral.stopRecord();
-                    _toggleBtnRecord(false);
-
                     e.printStackTrace();
                 }
             }
@@ -360,7 +356,6 @@ public class RTMPActivity extends CordovaActivity implements ConnectCheckerRtmp 
     private void _stopRecording() {
         if (rtmpCameral.isRecording()) {
             try {
-                _toggleBtnRecord(false);
                 rtmpCameral.stopRecord();
 
                 Toast.makeText(activity, "file " + currentDateAndTime + ".mp4 saved in " + folder.getAbsolutePath(), Toast.LENGTH_SHORT).show();

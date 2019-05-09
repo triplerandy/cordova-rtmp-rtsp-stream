@@ -350,11 +350,8 @@ public class RTSPActivity extends CordovaActivity implements ConnectCheckerRtsp 
                     SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.ENGLISH);
                     currentDateAndTime = sdf.format(new Date());
                     rtspCameral.startRecord(folder.getAbsolutePath() + "/" + currentDateAndTime + ".mp4");
-
-                    _toggleBtnRecord(false);
                 } catch (IOException e) {
                     rtspCameral.stopRecord();
-                    _toggleBtnRecord(false);
 
                     e.printStackTrace();
                 }
@@ -365,7 +362,6 @@ public class RTSPActivity extends CordovaActivity implements ConnectCheckerRtsp 
     private void _stopRecording() {
         if (rtspCameral.isRecording()) {
             try {
-                _toggleBtnRecord(true);
                 rtspCameral.stopRecord();
 
                 Toast.makeText(activity, "file " + currentDateAndTime + ".mp4 saved in " + folder.getAbsolutePath(), Toast.LENGTH_SHORT).show();
