@@ -281,9 +281,9 @@ public class RTMPActivity extends CordovaActivity implements ConnectCheckerRtmp 
 
         // video helper
         VideoHelper videoH = new VideoHelper();
-        Log.d(TAG, "Res: " + _w + "x" + _h + " bitrate " + videoH.bitrate(_w, _h));
+        Log.d(TAG, "Res: " + _w + "x" + _h + " bitrate " + videoH.bitrate(_h, _w));
 
-        if (rtmpCameral.prepareAudio() && rtmpCameral.prepareVideo(_w, _h, 30, videoH.bitrate(_w, _h),
+        if (rtmpCameral.prepareAudio() && rtmpCameral.prepareVideo(_h, _w, 30, videoH.bitrate(_h, _w),
                 false, 0)) {
             rtmpCameral.startStream(_url);
             _toggleBtnImgVideo(true);
