@@ -174,7 +174,6 @@ public class RTMPActivity extends CordovaActivity implements ConnectCheckerRtmp 
         VideoStream.sendBroadCast(activity, "onConnectionSuccess");
         runOnUiThread(() -> Toast.makeText(RTMPActivity.this, "Connection success", Toast.LENGTH_SHORT)
                 .show());
-        _toggleRecording();
     }
 
     @Override
