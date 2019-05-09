@@ -47,8 +47,7 @@
                     android:contentDescription="Change Resolution"
                     android:cropToPadding="false"
                     android:padding="10dp"
-                    android:src="@drawable/ic_tune_grey600_36dp"
-                    android:visibility="visible" />
+                    android:src="@drawable/ic_tune_grey600_36dp" />
 
                 <ImageButton
                     android:id="@+id/ic_switch_camera"
@@ -59,8 +58,7 @@
                     android:contentDescription="Switch Camera"
                     android:cropToPadding="false"
                     android:padding="10dp"
-                    android:src="@drawable/ic_switch_video_white_36dp"
-                    android:visibility="visible" />
+                    android:src="@drawable/ic_switch_video_white_36dp" />
 
                 <ImageButton
                     android:id="@+id/ic_preview_orientation"
@@ -78,7 +76,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="end"
-                    android:layout_alignParentLeft="true"
+                    android:layout_toRightOf="@+id/ic_preview_orientation"
                     android:background="#000000ff"
                     android:contentDescription="Torch"
                     android:padding="10dp"
