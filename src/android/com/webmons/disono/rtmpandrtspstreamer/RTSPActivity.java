@@ -68,6 +68,7 @@ public class RTSPActivity extends CordovaActivity implements ConnectCheckerRtsp 
     private ImageButton ic_switch_camera;
     private ImageButton ic_preview_orientation;
     private ImageButton ic_broadcast;
+    private ImageButton ic_record;
     private ImageButton ic_closed;
     private Camera1ApiManager camera1ApiManager;
 
@@ -239,6 +240,9 @@ public class RTSPActivity extends CordovaActivity implements ConnectCheckerRtsp 
         ic_broadcast = findViewById(_getResource("ic_broadcast", "id"));
         ic_broadcast.setOnClickListener(v -> _toggleStreaming());
 
+        ic_record = findViewById(_getResource("ic_record", "id"));
+        ic_record.setOnClickListener(v -> _toggleRecording());
+
         ic_closed = findViewById(_getResource("ic_closed", "id"));
         ic_closed.setOnClickListener(v -> _closedActivity());
     }
@@ -349,8 +353,11 @@ public class RTSPActivity extends CordovaActivity implements ConnectCheckerRtsp 
                     SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.ENGLISH);
                     currentDateAndTime = sdf.format(new Date());
                     rtspCameral.startRecord(folder.getAbsolutePath() + "/" + currentDateAndTime + ".mp4");
+
+                    _toggleBtnRecord(false);
                 } catch (IOException e) {
                     rtspCameral.stopRecord();
+                    _toggleBtnRecord(false);
 
                     e.printStackTrace();
                 }
@@ -361,6 +368,7 @@ public class RTSPActivity extends CordovaActivity implements ConnectCheckerRtsp 
     private void _stopRecording() {
         if (rtspCameral.isRecording()) {
             try {
+                _toggleBtnRecord(true);
                 rtspCameral.stopRecord();
 
                 Toast.makeText(activity, "file " + currentDateAndTime + ".mp4 saved in " + folder.getAbsolutePath(), Toast.LENGTH_SHORT).show();
@@ -407,6 +415,31 @@ public class RTSPActivity extends CordovaActivity implements ConnectCheckerRtsp 
             ic_broadcast.setImageDrawable(getDrawable(_getResource(icon, "drawable")));
         } else {
             ic_broadcast.setImageResource(_getResource(icon, "drawable"));
+        }
+    }
+
+    private void _toggleBtnRecord(boolean isRecordingOn) {
+        String icon = (!isRecordingOn) ? "ic_fiber_manual_record_white_36dp" : "ic_stop_white_36dp";
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            ic_record.setImageDrawable(getDrawable(_getResource(icon, "drawable")));
+        } else {
+            ic_record.setImageResource(_getResource(icon, "drawable"));
+        }
+
+        _animateRecording(icon);
+    }
+
+    private void _animateRecording(String icon) {
+        if (icon.equals("ic_stop_white_36dp")) {
+            Animation anim = new AlphaAnimation(0.0f, 1.0f);
+            anim.setDuration(600);
+            anim.setStartOffset(200);
+            anim.setRepeatMode(Animation.REVERSE);
+            anim.setRepeatCount(Animation.INFINITE);
+            ic_record.startAnimation(anim);
+        } else {
+            ic_record.clearAnimation();
         }
     }
 

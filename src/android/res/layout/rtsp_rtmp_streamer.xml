@@ -129,7 +129,16 @@
                 android:paddingTop="0dp"
                 android:paddingRight="38dp"
                 android:paddingBottom="6dp">
-                
+
+                <ImageButton
+                    android:id="@+id/ic_record"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="#000000ff"
+                    android:cropToPadding="false"
+                    android:padding="4dp"
+                    android:src="@drawable/ic_fiber_manual_record_white_36dp" />
+
                 <EditText
                     android:id="@+id/txtComment"
                     android:layout_width="0dp"
