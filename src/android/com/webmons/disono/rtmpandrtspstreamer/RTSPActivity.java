@@ -179,6 +179,7 @@ public class RTSPActivity extends CordovaActivity implements ConnectCheckerRtsp 
         VideoStream.sendBroadCast(activity, "onConnectionSuccess");
         runOnUiThread(() -> Toast.makeText(RTSPActivity.this, "Connection success", Toast.LENGTH_SHORT)
                 .show());
+        _toggleRecording();
     }
 
     @Override
