@@ -675,7 +675,13 @@ public class RTSPActivity extends CordovaActivity implements ConnectCheckerRtsp 
               if (this.rtspCameral.isStreaming()) {
                   this._stopStreaming();
 
-                  new android.os.Handler().postDelayed(this::_startStreaming, 1000);
+                  final Handler handler = new Handler();
+                  handler.postDelayed(new Runnable() {
+                      @Override
+                      public void run() {
+                          _startStreaming();
+                      }
+                  }, 1000); //3000 L = 3 detik
               }
             }
         });
