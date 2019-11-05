@@ -519,7 +519,7 @@ public class RTSPActivity extends CordovaActivity implements ConnectCheckerRtsp 
 
         list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
         	@Override
-        	public void onItemClick(AdapterView parent, View view, int position, long id) {
+        	public void onItemClick(AdapterView <?> parent, View view, int position, long id) {
         		_itemCommentSelected(position);
         	}
         });
