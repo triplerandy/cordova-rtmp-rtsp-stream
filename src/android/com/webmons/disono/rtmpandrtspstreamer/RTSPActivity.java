@@ -43,6 +43,13 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Locale;
+import android.os.Handler;
+import android.widget.TextView.OnEditorActionListener;
+import android.widget.AdapterView;
+import android.view.KeyEvent;
+import android.content.DialogInterface;
+import android.content.DialogInterface.OnClickListener;
+
 
 /**
  * Author: Archie, Disono (webmonsph@gmail.com)
@@ -112,20 +119,15 @@ public class RTSPActivity extends CordovaActivity implements ConnectCheckerRtsp 
                 String method = intent.getStringExtra("method");
 
                 if (method != null) {
-                    switch (method) {
-                        case "stop":
-                            _stopStreaming();
-                            break;
-                        case "commentList":
-                            _commentList(intent.getStringExtra("data"));
-                            break;
-                        case "commentListShow":
-                            _commentFormVisible(intent.getBooleanExtra("option", false));
-                            break;
-                        case "videoRecord":
-                            _toggleRecording();
-                            break;
-                    }
+                  if( method == "stop") {
+                    _stopStreaming();
+                  } else if(method == "commentList") {
+                    _commentList(intent.getStringExtra("data"));
+                  } else if(method == "commentListShow") {
+                    _commentFormVisible(intent.getBooleanExtra("option", false));
+                  } else if(method == "videoRecord") {
+                    _toggleRecording();
+                  }
                 }
             }
         }
@@ -605,14 +607,14 @@ public class RTSPActivity extends CordovaActivity implements ConnectCheckerRtsp 
         }
     }
 
-    private void _updateCommentList(boolean isShow, ArrayList<Comments> items) {
+    private void _updateCommentList(final boolean isShow, ArrayList<Comments> items) {
       runOnUiThread(new Runnable() {
           @Override
           public void run() {
             _commentFormVisible(isShow);
 
-            adapter.addAll(items);
-            adapter.notifyDataSetChanged();
+            // adapter.addAll(items);
+            // adapter.notifyDataSetChanged();
           }
       });
     }
@@ -661,31 +663,31 @@ public class RTSPActivity extends CordovaActivity implements ConnectCheckerRtsp 
             resolutions[i] = this.resolutions.get(i).width + "x" + this.resolutions.get(i).height;
         }
 
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("Change resolution");
-        builder.setItems(resolutions, new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int which) {
-              // the user clicked on colors[which]
-              Log.d(TAG, "Selected: " + resolutions[which] + " " +
-                      this.resolutions.get(which).width + "x" + this.resolutions.get(which).height);
-
-              this.selectedWidth = this.resolutions.get(which).width;
-              this.selectedHeight = this.resolutions.get(which).height;
-
-              if (this.rtspCameral.isStreaming()) {
-                  this._stopStreaming();
-
-                  final Handler handler = new Handler();
-                  handler.postDelayed(new Runnable() {
-                      @Override
-                      public void run() {
-                          _startStreaming();
-                      }
-                  }, 1000); //3000 L = 3 detik
-              }
-            }
-        });
-        builder.show();
+        // AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        // builder.setTitle("Change resolution");
+        // builder.setItems(resolutions, new DialogInterface.OnClickListener() {
+        //     public void onClick(DialogInterface dialog, int which) {
+        //       // the user clicked on colors[which]
+        //       Log.d(TAG, "Selected: " + resolutions[which] + " " +
+        //               this.resolutions.get(which).width + "x" + this.resolutions.get(which).height);
+        //
+        //       this.selectedWidth = resolutions.get(which).width;
+        //       this.selectedHeight = resolutions.get(which).height;
+        //
+        //       if (this.rtspCameral.isStreaming()) {
+        //           this._stopStreaming();
+        //
+        //           final Handler handler = new Handler();
+        //           handler.postDelayed(new Runnable() {
+        //               @Override
+        //               public void run() {
+        //                   _startStreaming();
+        //               }
+        //           }, 1000); //3000 L = 3 detik
+        //       }
+        //     }
+        // });
+        // builder.show();
     }
 
     private void _closedActivity() {

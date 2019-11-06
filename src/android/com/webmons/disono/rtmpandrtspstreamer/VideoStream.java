@@ -21,23 +21,23 @@ import java.io.File;
 /**
  * Author: Archie, Disono (webmonsph@gmail.com)
  * Website: https://webmons.com
- * 
+ *
  * Created at: 1/09/2018
  */
 
 /**
  * Wowza Configuration
- * 
+ *
  * Config
  * http://your-ip/enginemanager
  * https://www.wowza.com/docs/how-to-set-up-live-streaming-using-an-rtmp-based-encoder
  * https://www.wowza.com/docs/how-to-set-up-live-streaming-using-a-native-rtp-encoder-with-sdp-file
- * 
+ *
  * Server URL: rtmp://[wowza-ip-address]/live
  * Stream Name: myStream
  * User: publisherName
  * password: [password]
- * 
+ *
  * Verify your server or endpoint using ffmpeg
  * ffmpeg -i pathtomp4file -f flv rtmp://yourendpoint
  */
@@ -67,60 +67,39 @@ public class VideoStream extends CordovaPlugin {
                 Log.d(TAG, "Method: " + method + " Data: " + data);
 
                 if (method != null) {
-                    switch (method) {
-                        case "onConnectionSuccess":
-                            _cordovaSendResult("onConnectionSuccess", data);
 
-                            break;
-                        case "onConnectionFailed":
-                            _plugResultError("Connection failed.");
-
-                            break;
-                        case "onDisconnect":
-                            _plugResultError("Disconnected from the stream server.");
-
-                            break;
-                        case "onAuthError":
-                            _plugResultError("Authentication error, invalid credentials.");
-
-                            break;
-                        case "onAuthSuccess":
-                            _cordovaSendResult("onAuthSuccess", data);
-
-                            break;
-                        case "onStartStream":
-                            _cordovaSendResult("onStartStream", data);
-
-                            break;
-
-                        case "onStopStream":
-                            _cordovaSendResult("onStopStream", data);
-
-                            break;
-
-                        case "onError":
-                            if (data != null) {
-                                try {
-                                    JSONObject obj = new JSONObject(data);
-                                    _plugResultError(obj.getString("message"));
-                                } catch (JSONException e) {
-                                    e.printStackTrace();
-                                    _plugResultError(e.getMessage());
-                                }
-                            } else {
-                                _plugResultError("Unknown error occurred.");
-                            }
-
-                            break;
-                        case "onCommentSend":
-                            _cordovaSendResult("onCommentSend", data);
-
-                            break;
-                        case "onCommentItemSelected":
-                            _cordovaSendResult("onCommentItemSelected", data);
-
-                            break;
+                  if(method == "onConnectionSuccess") {
+                    _cordovaSendResult("onConnectionSuccess", data);
+                  } else if(method == "onConnectionFailed") {
+                    _plugResultError("Connection failed.");
+                  } else if(method == "onDisconnect") {
+                    _plugResultError("Disconnected from the stream server.");
+                  } else if(method == "onAuthError") {
+                    _plugResultError("Authentication error, invalid credentials.");
+                  } else if(method == "onAuthSuccess") {
+                    _cordovaSendResult("onAuthSuccess", data);
+                  } else if(method == "onStartStream") {
+                    _cordovaSendResult("onStartStream", data);
+                  } else if(method == "onStopStream") {
+                    _cordovaSendResult("onStopStream", data);
+                  } else if(method == "onError") {
+                    if (data != null) {
+                        try {
+                            JSONObject obj = new JSONObject(data);
+                            _plugResultError(obj.getString("message"));
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                            _plugResultError(e.getMessage());
+                        }
+                    } else {
+                        _plugResultError("Unknown error occurred.");
                     }
+                  } else if(method == "onCommentSend") {
+                    _cordovaSendResult("onCommentSend", data);
+                  } else if(method == "onCommentItemSelected") {
+                    _cordovaSendResult("onCommentItemSelected", data);
+                  }
+
                 }
             }
         }
@@ -201,48 +180,48 @@ public class VideoStream extends CordovaPlugin {
         if (cordova.hasPermission(WRITE_EXTERNAL_STORAGE) && cordova.hasPermission(CAMERA) &&
                 cordova.hasPermission(RECORD_AUDIO) && cordova.hasPermission(MODIFY_AUDIO_SETTINGS) &&
                 cordova.hasPermission(READ_EXTERNAL_STORAGE)) {
-            switch (action) {
-                case "streamRTSP":
-                    _startRTSP(url, null, null);
-                    _plugResultsKeep();
 
-                    return true;
-                case "streamRTSPAuth":
-                    _startRTSP(url, username, password);
-                    _plugResultsKeep();
+                if(action =="streamRTSP") {
+                  _startRTSP(url, null, null);
+                  _plugResultsKeep();
+                  return true;
+                 }
+                else if(action == "streamRTSPAuth") {
+                  _startRTSP(url, username, password);
+                  _plugResultsKeep();
+                  return true;
+                 }
+                else if(action == "streamRTMP") {
+                  _startRTMP(url, null, null);
+                  _plugResultsKeep();
+                  return true;
+                 }
+                else if(action == "streamRTMPAuth") {
+                  _startRTMP(url, username, password);
+                  _plugResultsKeep();
+                  return true;
+                 }
+                else if(action == "streamStop") {
+                  _filters("stop");
+                  _plugResultsKeep();
+                  return true;
+                 }
+                else if(action == "commentList") {
+                  _filters("commentList", args.getJSONArray(0));
+                  _plugResultsKeep();
+                  return true;
+                 }
+                else if(action == "commentListShow") {
+                  _filters("commentListShow", args.getBoolean(0));
+                  _plugResultsKeep();
+                  return true;
+                 }
+                else if(action == "videoRecord") {
+                  _filters("videoRecord");
+                  _plugResultsKeep();
+                  return true;
+                 }
 
-                    return true;
-                case "streamRTMP":
-                    _startRTMP(url, null, null);
-                    _plugResultsKeep();
-
-                    return true;
-                case "streamRTMPAuth":
-                    _startRTMP(url, username, password);
-                    _plugResultsKeep();
-
-                    return true;
-                case "streamStop":
-                    _filters("stop");
-                    _plugResultsKeep();
-
-                    return true;
-                case "commentList":
-                    _filters("commentList", args.getJSONArray(0));
-                    _plugResultsKeep();
-
-                    return true;
-                case "commentListShow":
-                    _filters("commentListShow", args.getBoolean(0));
-                    _plugResultsKeep();
-
-                    return true;
-                case "videoRecord":
-                    _filters("videoRecord");
-                    _plugResultsKeep();
-
-                    return true;
-            }
         } else {
             _getReadPermission(REQ_CODE);
             _plugResultsKeep();
