@@ -43,13 +43,6 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Locale;
-import android.os.Handler;
-import android.widget.TextView.OnEditorActionListener;
-import android.widget.AdapterView;
-import android.view.KeyEvent;
-import android.content.DialogInterface;
-import android.content.DialogInterface.OnClickListener;
-
 
 /**
  * Author: Archie, Disono (webmonsph@gmail.com)
@@ -119,15 +112,20 @@ public class RTSPActivity extends CordovaActivity implements ConnectCheckerRtsp 
                 String method = intent.getStringExtra("method");
 
                 if (method != null) {
-                  if( method == "stop") {
-                    _stopStreaming();
-                  } else if(method == "commentList") {
-                    _commentList(intent.getStringExtra("data"));
-                  } else if(method == "commentListShow") {
-                    _commentFormVisible(intent.getBooleanExtra("option", false));
-                  } else if(method == "videoRecord") {
-                    _toggleRecording();
-                  }
+                    switch (method) {
+                        case "stop":
+                            _stopStreaming();
+                            break;
+                        case "commentList":
+                            _commentList(intent.getStringExtra("data"));
+                            break;
+                        case "commentListShow":
+                            _commentFormVisible(intent.getBooleanExtra("option", false));
+                            break;
+                        case "videoRecord":
+                            _toggleRecording();
+                            break;
+                    }
                 }
             }
         }
@@ -179,60 +177,42 @@ public class RTSPActivity extends CordovaActivity implements ConnectCheckerRtsp 
     @Override
     public void onConnectionSuccessRtsp() {
         VideoStream.sendBroadCast(activity, "onConnectionSuccess");
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                Toast.makeText(RTSPActivity.this, "Connection success", Toast.LENGTH_SHORT)
-                        .show();
-            }
-        });
+        runOnUiThread(() -> Toast.makeText(RTSPActivity.this, "Connection success", Toast.LENGTH_SHORT)
+                .show());
     }
 
     @Override
     public void onConnectionFailedRtsp(final String reason) {
         VideoStream.sendBroadCast(activity, "onConnectionFailed");
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                Toast.makeText(RTSPActivity.this, "Connection failed. " + reason,
-                        Toast.LENGTH_SHORT).show();
-                _stopStreaming();
-            }
+        runOnUiThread(() -> {
+            Toast.makeText(RTSPActivity.this, "Connection failed. " + reason,
+                    Toast.LENGTH_SHORT).show();
+            _stopStreaming();
         });
     }
 
     @Override
     public void onDisconnectRtsp() {
         VideoStream.sendBroadCast(activity, "onDisconnect");
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                Toast.makeText(RTSPActivity.this, "Disconnected", Toast.LENGTH_SHORT).show();
-            }
+        runOnUiThread(() -> {
+            Toast.makeText(RTSPActivity.this, "Disconnected", Toast.LENGTH_SHORT).show();
+            _stopStreaming();
         });
     }
 
     @Override
     public void onAuthErrorRtsp() {
         VideoStream.sendBroadCast(activity, "onAuthError");
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                Toast.makeText(RTSPActivity.this, "Auth error", Toast.LENGTH_SHORT).show();
-                _stopStreaming();
-            }
+        runOnUiThread(() -> {
+            Toast.makeText(RTSPActivity.this, "Auth error", Toast.LENGTH_SHORT).show();
+            _stopStreaming();
         });
     }
 
     @Override
     public void onAuthSuccessRtsp() {
         VideoStream.sendBroadCast(activity, "onAuthSuccess");
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                Toast.makeText(RTSPActivity.this, "Auth success", Toast.LENGTH_SHORT).show();
-            }
-        });
+        runOnUiThread(() -> Toast.makeText(RTSPActivity.this, "Auth success", Toast.LENGTH_SHORT).show());
     }
 
     private void _broadcastRCV() {
@@ -246,69 +226,32 @@ public class RTSPActivity extends CordovaActivity implements ConnectCheckerRtsp 
         camera1ApiManager = new Camera1ApiManager(surfaceView, rtspCameral);
 
         ic_torch = findViewById(_getResource("ic_torch", "id"));
-        ic_torch.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                _toggleFlash();
-            }
-        });
+        ic_torch.setOnClickListener(v -> _toggleFlash());
 
         ic_resolutions = findViewById(_getResource("ic_resolutions", "id"));
-        ic_resolutions.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                _changeOrientation();
-            }
-        });
+        ic_resolutions.setOnClickListener(v -> _changeOrientation());
 
         ic_switch_camera = findViewById(_getResource("ic_switch_camera", "id"));
-        ic_switch_camera.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                _toggleCameraFace();
-            }
-        });
+        ic_switch_camera.setOnClickListener(v -> _toggleCameraFace());
 
         ic_preview_orientation = findViewById(_getResource("ic_preview_orientation", "id"));
-        ic_preview_orientation.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                _changeOrientation();
-            }
-        });
+        ic_preview_orientation.setOnClickListener(v -> _changeOrientation());
 
         ic_broadcast = findViewById(_getResource("ic_broadcast", "id"));
-        ic_broadcast.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                _toggleStreaming();
-            }
-        });
+        ic_broadcast.setOnClickListener(v -> _toggleStreaming());
 
         ic_record = findViewById(_getResource("ic_record", "id"));
-        ic_record.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                _toggleRecording();
-            }
-        });
+        ic_record.setOnClickListener(v -> _toggleRecording());
 
         ic_closed = findViewById(_getResource("ic_closed", "id"));
-        ic_closed.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                _closedActivity();
-            }
-        });
+        ic_closed.setOnClickListener(v -> _closedActivity());
     }
 
     private void _changeOrientation() {
         AlertDialog.Builder builder = new AlertDialog.Builder(RTSPActivity.this);
         builder.setTitle("Select Orientation")
-                .setItems(_orient, new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-                      camera1ApiManager.setPreviewOrientation(Integer.parseInt(_orient[which]));
-                    }
+                .setItems(_orient, (dialog, which) -> {
+                    camera1ApiManager.setPreviewOrientation(Integer.parseInt(_orient[which]));
                 });
         AlertDialog dialog = builder.create();
         dialog.show();
@@ -514,37 +457,30 @@ public class RTSPActivity extends CordovaActivity implements ConnectCheckerRtsp 
         txtComment = findViewById(_getResource("txtComment", "id"));
         btnComment = findViewById(_getResource("btnComment", "id"));
 
-        mComments = new ArrayList();
+        mComments = new ArrayList<>();
         adapter = new CommentListAdapter(this, _getResource("comment_list", "layout"), mComments);
         list = findViewById(_getResource("commentList", "id"));
         list.setAdapter(adapter);
 
-        list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-        	@Override
-        	public void onItemClick(AdapterView <?> parent, View view, int position, long id) {
-        		_itemCommentSelected(position);
-        	}
+        list.setOnItemClickListener((parent, view, position, id) -> {
+            // click on item
+            _itemCommentSelected(position);
         });
 
-        btnComment.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                isListShow = !isListShow;
-                _isListCommentShow(isListShow);
-            }
+        btnComment.setOnClickListener(v -> {
+            // send comment
+            isListShow = !isListShow;
+            _isListCommentShow(isListShow);
         });
 
         txtComment.clearFocus();
-        txtComment.setOnEditorActionListener(new OnEditorActionListener() {
-            @Override
-            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                boolean handled = false;
-                if (actionId == EditorInfo.IME_ACTION_SEND) {
-                    _sendComment(v);
-                    handled = true;
-                }
-                return handled;
+        txtComment.setOnEditorActionListener((v, actionId, event) -> {
+            if (actionId == EditorInfo.IME_ACTION_DONE) {
+                _sendComment(v);
+                return true;
             }
+
+            return false;
         });
 
         _commentFormVisible(isShow);
@@ -588,7 +524,7 @@ public class RTSPActivity extends CordovaActivity implements ConnectCheckerRtsp 
                 adapter.clear();
             }
 
-            mComments = new ArrayList();
+            mComments = new ArrayList<>();
             JSONArray items = new JSONArray(data);
 
             for (int i = 0; i < items.length(); i++) {
@@ -607,16 +543,13 @@ public class RTSPActivity extends CordovaActivity implements ConnectCheckerRtsp 
         }
     }
 
-    private void _updateCommentList(final boolean isShow, ArrayList<Comments> items) {
-      runOnUiThread(new Runnable() {
-          @Override
-          public void run() {
+    private void _updateCommentList(boolean isShow, ArrayList<Comments> items) {
+        runOnUiThread(() -> {
             _commentFormVisible(isShow);
 
-            // adapter.addAll(items);
-            // adapter.notifyDataSetChanged();
-          }
-      });
+            adapter.addAll(items);
+            adapter.notifyDataSetChanged();
+        });
     }
 
     private void _isListCommentShow(boolean isShow) {
@@ -663,31 +596,23 @@ public class RTSPActivity extends CordovaActivity implements ConnectCheckerRtsp 
             resolutions[i] = this.resolutions.get(i).width + "x" + this.resolutions.get(i).height;
         }
 
-        // AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        // builder.setTitle("Change resolution");
-        // builder.setItems(resolutions, new DialogInterface.OnClickListener() {
-        //     public void onClick(DialogInterface dialog, int which) {
-        //       // the user clicked on colors[which]
-        //       Log.d(TAG, "Selected: " + resolutions[which] + " " +
-        //               this.resolutions.get(which).width + "x" + this.resolutions.get(which).height);
-        //
-        //       this.selectedWidth = resolutions.get(which).width;
-        //       this.selectedHeight = resolutions.get(which).height;
-        //
-        //       if (this.rtspCameral.isStreaming()) {
-        //           this._stopStreaming();
-        //
-        //           final Handler handler = new Handler();
-        //           handler.postDelayed(new Runnable() {
-        //               @Override
-        //               public void run() {
-        //                   _startStreaming();
-        //               }
-        //           }, 1000); //3000 L = 3 detik
-        //       }
-        //     }
-        // });
-        // builder.show();
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Change resolution");
+        builder.setItems(resolutions, (dialog, which) -> {
+            // the user clicked on colors[which]
+            Log.d(TAG, "Selected: " + resolutions[which] + " " +
+                    this.resolutions.get(which).width + "x" + this.resolutions.get(which).height);
+
+            this.selectedWidth = this.resolutions.get(which).width;
+            this.selectedHeight = this.resolutions.get(which).height;
+
+            if (this.rtspCameral.isStreaming()) {
+                this._stopStreaming();
+
+                new android.os.Handler().postDelayed(this::_startStreaming, 1000);
+            }
+        });
+        builder.show();
     }
 
     private void _closedActivity() {
